@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  <div class="container pt-4">
+  <div class="row p-0 mt-4">
+    <div class="col-lg-4 shadow mx-auto shadow p-0">
+      <div class="alert alert-info">
+        <h2>Add New TODO</h2>
+      </div> 
+      <div class="p-4">
+        <form action="/add-todo/" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <hr>
+        <input type="submit" value="ADD", class="btn btn-info">
+      </form>
+    </div>
+    </div>
+    <div class="col">
+      <div class="border">
+       
+      {% if todos|length == 0 %}
+        <!-- No todo Notification -->
+        <div class="p-4 shadow">
+          <br><br>
+          <div class="alert alert-info shadow text-center">
+            <p class="" style="font-size:30px">No Todos</p>
+           </div>
+           <br><br>
+        </div>
+
+
+      {%else%}
+      <!-- creating table -->
+        <div>
+          <table class="table">
+            <thead >
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+             
+                {% for todo in todos %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>{{todo.title}}</td>
+                  <td>
+                    {% if todo.status == 'C' %}
+                    <a href="/change-status/{{todo.id}}/C" title="Mark Completed"><i class="fa fa-check-circle" style="font-size:26px;color: green" ></i></a>
+                    {% else %}
+                    <a href="/change-status/{{todo.id}}/P" title="Mark Pending"><i class="fa fa-clock-o" style="font-size:26px;color:yellow"></i></a>
+                    {% endif %}
+                  </td>
+                  <td>{{todo.priority}}</td>
+                  <td>
+                    <a href="/delete-todo/{{todo.id}}" title="Delete"><i class="fa fa-trash-o" style="font-size:26px;color: red"></i></a>
+                    &nbsp;&nbsp;
+                    {% if todo.status == 'P' %}
+                    <a href="/change-status/{{todo.id}}/C" title="Mark Completed"><i class="fa fa-check-circle" style="font-size:26px;color: green" ></i></a>
+                    {% else %}
+                    <a href="/change-status/{{todo.id}}/P" title="Mark Pending"><i class="fa fa-clock-o" style="font-size:26px;color:yellow"></i></a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+             
+              
+              {{todo.title}}
+              
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}  
